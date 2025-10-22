@@ -4,57 +4,27 @@
     <title>Warenkorb</title>
 </head>
 <body>
-<section>
+<section class="amzn-section" id="cart-page">
     <h2>Ihr Warenkorb</h2>
-    <div th:if="${message}" class="alert" role="status" th:text="${message}"></div>
-    <div th:if="${error}" class="alert alert-error" role="alert" th:text="${error}"></div>
-    <div th:if="${cart.items().isEmpty()}">
-        <p>Der Warenkorb ist leer.</p>
+    <div class="cart-empty hidden" id="cart-empty">
+        <p>Ihr Warenkorb ist derzeit leer. Entdecken Sie unsere Bestseller und füllen Sie ihn mit neuen Lieblingsbüchern.</p>
+        <a href="/search" class="button-secondary">Jetzt stöbern</a>
     </div>
-    <div th:unless="${cart.items().isEmpty()}">
-        <table class="table" aria-describedby="cartSummary">
-            <thead>
-            <tr>
-                <th scope="col">Titel</th>
-                <th scope="col">Menge</th>
-                <th scope="col">Preis</th>
-                <th scope="col">Gesamt</th>
-                <th scope="col">Aktionen</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="item : ${cart.items()}">
-                <td th:text="${item.title()}"></td>
-                <td>
-                    <form th:action="@{/cart/update}" method="post">
-                        <input type="hidden" name="itemId" th:value="${item.itemId()}">
-                        <label th:for="${'qty-' + item.itemId()}" class="sr-only">Menge</label>
-                        <input th:id="${'qty-' + item.itemId()}" name="quantity" type="number" min="1" th:value="${item.quantity()}">
-                        <button type="submit">Aktualisieren</button>
-                    </form>
-                </td>
-                <td th:text="${#numbers.formatDecimal(item.unitPrice(),1,2)} + ' €'"></td>
-                <td th:text="${#numbers.formatDecimal(item.subtotal(),1,2)} + ' €'"></td>
-                <td>
-                    <form th:action="@{/cart/remove}" method="post">
-                        <input type="hidden" name="itemId" th:value="${item.itemId()}">
-                        <button type="submit">Entfernen</button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <div id="cartSummary" role="region" aria-live="polite">
-            <p><strong>Zwischensumme:</strong> <span th:text="${#numbers.formatDecimal(cart.subtotal(),1,2)}"></span> €</p>
-            <p><strong>Rabatt:</strong> <span th:text="${#numbers.formatDecimal(cart.discount(),1,2)}"></span> €</p>
-            <p><strong>Gesamt:</strong> <span th:text="${#numbers.formatDecimal(cart.total(),1,2)}"></span> €</p>
-        </div>
-        <form class="coupon-form" method="post" th:action="@{/cart/apply-coupon}" aria-label="Gutschein anwenden">
-            <label for="couponCode">Gutscheincode</label>
-            <input id="couponCode" name="code" type="text" th:value="${cart.couponCode()}">
-            <button type="submit">Anwenden</button>
-        </form>
-        <p><a th:href="@{/checkout}" class="button">Weiter zur Kasse</a></p>
+    <div class="cart-layout hidden" id="cart-content">
+        <div class="cart-items" id="cart-items"></div>
+        <aside class="cart-summary-card" id="cart-summary" role="region" aria-live="polite">
+            <h3>Bestellübersicht</h3>
+            <p>Zwischensumme: <strong id="cart-subtotal">0,00 €</strong></p>
+            <p>Rabatt: <strong id="cart-discount">0,00 €</strong></p>
+            <p class="cart-summary-total">Gesamt: <span id="cart-total">0,00 €</span></p>
+            <div class="coupon-form" aria-label="Gutschein anwenden">
+                <label for="couponCode">Gutscheincode</label>
+                <input id="couponCode" type="text" placeholder="WELCOME10">
+                <button type="button" id="apply-coupon">Anwenden</button>
+                <p class="coupon-feedback" id="coupon-feedback" role="status"></p>
+            </div>
+            <button class="button-primary" type="button" id="checkout-button">Zur Kasse</button>
+        </aside>
     </div>
 </section>
 </body>

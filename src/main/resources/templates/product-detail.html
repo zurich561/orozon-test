@@ -4,63 +4,64 @@
     <title th:text="${product.title}">Produkt</title>
 </head>
 <body>
-<section>
-    <article class="result-card">
+<section class="amzn-section product-detail-layout"
+         th:attr="data-product-id=${product.id},
+                  data-product-title=${product.title},
+                  data-product-price=${product.price},
+                  data-product-cover=${product.coverImageUrl},
+                  data-product-author=${product.author}">
+    <article class="product-card">
+        <figure class="product-media">
+            <img th:src="${product.coverImageUrl}" th:alt="${'Cover von ' + product.title}" loading="lazy">
+            <button class="favorite-button" type="button" th:attr="data-favorite-id=${product.id}">
+                <span aria-hidden="true">❤</span>
+                <span class="sr-only">Zu Favoriten hinzufügen</span>
+            </button>
+        </figure>
+        <span class="badge" th:text="${product.format}">Format</span>
         <h2 th:text="${product.title}">Titel</h2>
         <p><strong>Autor:</strong> <span th:text="${product.author}"></span></p>
         <p><strong>ISBN:</strong> <span th:text="${product.isbn}"></span></p>
-        <p><strong>Format:</strong> <span th:text="${product.format}"></span></p>
-        <p><strong>Sprache:</strong> <span th:text="${product.language}"></span></p>
-        <p><strong>Preis:</strong> <span th:text="${#numbers.formatDecimal(product.price,1,2)}"></span> €</p>
+        <div class="amzn-chip-group">
+            <span class="amzn-chip" th:text="${product.language}">Sprache</span>
+            <span class="amzn-chip" th:text="${product.category}">Kategorie</span>
+        </div>
+        <p class="amzn-price"><span th:text="${#numbers.formatDecimal(product.price,1,2)}"></span> €</p>
+        <div class="amzn-divider"></div>
         <p th:text="${product.description}"></p>
-        <form method="post" data-cart-form="true">
-            <input type="hidden" name="productId" th:value="${product.id}">
-            <label for="detailQty">Menge</label>
-            <input id="detailQty" name="quantity" type="number" value="1" min="1">
-            <button type="submit">In den Warenkorb</button>
-        </form>
     </article>
-    <section aria-labelledby="similarHeading">
-        <h3 id="similarHeading">Ähnliche Titel</h3>
-        <ul>
-            <li th:each="item : ${similar}"><a th:href="@{'/products/' + ${item.id}}" th:text="${item.title}"></a></li>
-        </ul>
-    </section>
-    <section aria-labelledby="alsoHeading">
-        <h3 id="alsoHeading">Kundinnen kauften auch</h3>
-        <ul>
-            <li th:each="item : ${alsoBought}"><a th:href="@{'/products/' + ${item.id}}" th:text="${item.title}"></a></li>
-        </ul>
-    </section>
+    <aside class="product-buybox">
+        <p class="amzn-price"><span th:text="${#numbers.formatDecimal(product.price,1,2)}"></span> €</p>
+        <p>inkl. MwSt. • <strong>Schneller Versand</strong></p>
+        <label for="detailQty">Menge</label>
+        <input id="detailQty" name="quantity" type="number" value="1" min="1" class="qty-input">
+        <button type="button" class="button-primary" data-add-to-cart>
+            In den Warenkorb
+        </button>
+        <button type="button" class="button-secondary" data-add-to-favorites th:attr="data-favorite-id=${product.id}">
+            Zu Favoriten
+        </button>
+    </aside>
 </section>
-<script>
-    const form = document.querySelector('form[data-cart-form]');
-    if (form) {
-        form.addEventListener('submit', function (event) {
-            event.preventDefault();
-            const formData = new FormData(form);
-            const payload = {
-                productId: Number(formData.get('productId')),
-                quantity: Number(formData.get('quantity'))
-            };
-            fetch('/api/cart/items', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            }).then(res => {
-                if (res.ok) {
-                    alert('Produkt im Warenkorb.');
-                } else if (res.status === 401) {
-                    window.location.href = '/login';
-                } else {
-                    res.json().then(data => alert(data.error || 'Fehler'));
-                }
-            });
-        });
-    }
-</script>
+<section class="amzn-section recommendations" aria-label="Empfehlungen">
+    <div aria-labelledby="similarHeading" class="recommendation-group">
+        <h3 id="similarHeading">Ähnliche Titel</h3>
+        <div class="recommendation-grid">
+            <article th:each="item : ${similar}" class="recommendation-card">
+                <img th:src="${item.coverImageUrl}" th:alt="${'Cover von ' + item.title}" loading="lazy">
+                <h4><a th:href="@{'/products/' + ${item.id}}" th:text="${item.title}"></a></h4>
+            </article>
+        </div>
+    </div>
+    <div aria-labelledby="alsoHeading" class="recommendation-group">
+        <h3 id="alsoHeading">Kundinnen kauften auch</h3>
+        <div class="recommendation-grid">
+            <article th:each="item : ${alsoBought}" class="recommendation-card">
+                <img th:src="${item.coverImageUrl}" th:alt="${'Cover von ' + item.title}" loading="lazy">
+                <h4><a th:href="@{'/products/' + ${item.id}}" th:text="${item.title}"></a></h4>
+            </article>
+        </div>
+    </div>
+</section>
 </body>
 </html>

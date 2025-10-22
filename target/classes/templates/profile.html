@@ -16,8 +16,16 @@
 
     <section aria-labelledby="addressHeading">
         <h3 id="addressHeading">Adressen</h3>
-        <ul>
-            <li th:each="address : ${addresses}" th:text="${address.type} + ': ' + address.street + ', ' + address.postalCode + ' ' + address.city + ' ' + address.country}"></li>
+        <ul class="address-list">
+            <li th:each="address : ${addresses}">
+                <span class="address-label" th:text="${address.type}">SHIPPING</span>
+                <div class="address-line">
+                    <span th:text="${address.street}">Straße</span>,
+                    <span th:text="${address.postalCode}">PLZ</span>
+                    <span th:text="${address.city}">Stadt</span>,
+                    <span th:text="${address.country}">Land</span>
+                </div>
+            </li>
         </ul>
         <form th:action="@{/profile/address}" th:object="${addressForm}" method="post" aria-label="Adresse hinzufügen">
             <label for="addrType">Typ</label>

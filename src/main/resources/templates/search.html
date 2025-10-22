@@ -4,85 +4,91 @@
     <title>Produktsuche</title>
 </head>
 <body>
-<section>
-    <h2>Finden Sie Ihr nächstes Buch</h2>
-    <form role="search" aria-label="Produktsuche" method="get" th:action="@{/search}">
-        <label for="searchTerm">Suchbegriff</label>
-        <div class="autocomplete-wrapper" style="position: relative;">
-            <input id="searchTerm" name="q" type="search" th:value="${query}" aria-autocomplete="list" aria-controls="searchSuggestions" aria-haspopup="listbox">
-            <ul id="searchSuggestions" class="autocomplete-list hidden" role="listbox"></ul>
+<section class="amzn-section amzn-hero">
+    <h2>Finden Sie Ihr nächstes Lieblingsbuch</h2>
+    <p>Tauchen Sie in kuratierte Empfehlungen, Top-Seller und personalisierte Treffer ein – fast wie bei Amazon.</p>
+</section>
+<section class="amzn-section search-layout" aria-label="Produktsuche">
+    <form class="search-filters-bar" role="search" method="get" th:action="@{/search}">
+        <div class="filter-input filter-search">
+            <label for="searchTerm" class="sr-only">Suchbegriff</label>
+            <div class="autocomplete-wrapper">
+                <input id="searchTerm" name="q" type="search" th:value="${query}" aria-autocomplete="list"
+                       aria-controls="searchSuggestions" aria-haspopup="listbox" placeholder="Autor, Titel, ISBN">
+                <ul id="searchSuggestions" class="autocomplete-list hidden" role="listbox"></ul>
+            </div>
         </div>
-        <label for="category">Kategorie</label>
-        <select id="category" name="category">
-            <option value="">Alle</option>
-            <option th:each="category : ${categories}"
-                    th:value="${category}" th:text="${category}" th:selected="${category} == ${param.category}"></option>
-        </select>
-        <label for="author">Autor</label>
-        <input id="author" name="author" type="text" th:value="${param.author}">
-        <label for="language">Sprache</label>
-        <input id="language" name="language" type="text" th:value="${param.language}">
-        <label for="format">Format</label>
-        <select id="format" name="format">
-            <option value="">Alle</option>
-            <option th:each="fmt : ${formats}"
-                    th:value="${fmt}" th:text="${fmt}" th:selected="${fmt} == ${param.format}"></option>
-        </select>
-        <div class="price-range" role="group" aria-labelledby="priceLabel">
-            <span id="priceLabel">Preisbereich</span>
-            <label for="minPrice">Min</label>
+        <div class="filter-input">
+            <label for="category">Kategorie</label>
+            <select id="category" name="category">
+                <option value="">Alle</option>
+                <option th:each="category : ${categories}"
+                        th:value="${category}" th:text="${category}" th:selected="${category} == ${param.category}"></option>
+            </select>
+        </div>
+        <div class="filter-input">
+            <label for="author">Autor</label>
+            <input id="author" name="author" type="text" th:value="${param.author}">
+        </div>
+        <div class="filter-input">
+            <label for="language">Sprache</label>
+            <input id="language" name="language" type="text" th:value="${param.language}">
+        </div>
+        <div class="filter-input">
+            <label for="format">Format</label>
+            <select id="format" name="format">
+                <option value="">Alle</option>
+                <option th:each="fmt : ${formats}"
+                        th:value="${fmt}" th:text="${fmt}" th:selected="${fmt} == ${param.format}"></option>
+            </select>
+        </div>
+        <div class="filter-input filter-price">
+            <label for="minPrice">Preis von</label>
             <input id="minPrice" name="minPrice" type="number" step="0.01" min="0" th:value="${param.minPrice}">
-            <label for="maxPrice">Max</label>
+            <label for="maxPrice">bis</label>
             <input id="maxPrice" name="maxPrice" type="number" step="0.01" min="0" th:value="${param.maxPrice}">
         </div>
-        <button type="submit">Suchen</button>
+        <button type="submit" class="button-primary filter-submit">Filtern</button>
     </form>
-    <div aria-live="polite" aria-atomic="true">
-        <p th:text="${totalResults} + ' Ergebnisse gefunden'">0 Ergebnisse gefunden</p>
-    </div>
-    <div class="result-list" role="list">
-        <article class="result-card" role="listitem" th:each="product : ${products}">
-            <h3><a th:href="@{'/products/' + ${product.id}}" th:text="${product.title}"></a></h3>
-            <p><strong>Autor:</strong> <span th:text="${product.author}"></span></p>
-            <p><strong>ISBN:</strong> <span th:text="${product.isbn}"></span></p>
-            <p><strong>Preis:</strong> <span th:text="${#numbers.formatDecimal(product.price,1,2)}"></span> €</p>
-            <p th:text="${product.description}"></p>
-            <form method="post" th:action="@{/api/cart/items}" data-cart-form="true">
-                <input type="hidden" name="productId" th:value="${product.id}">
-                <label th:for="${'qty-' + product.id}">Menge</label>
-                <input th:id="${'qty-' + product.id}" type="number" name="quantity" min="1" value="1">
-                <button type="submit">In den Warenkorb</button>
-            </form>
-        </article>
+    <div class="search-results" role="region" aria-live="polite" aria-atomic="true">
+        <div class="search-results-header">
+            <h3>Suchergebnisse</h3>
+            <p th:text="${totalResults} + ' Ergebnisse gefunden'">0 Ergebnisse gefunden</p>
+        </div>
+        <div class="result-list" role="list">
+            <article class="result-card" role="listitem" th:each="product : ${products}"
+                     th:attr="data-product-id=${product.id},
+                              data-product-title=${product.title},
+                              data-product-price=${product.price},
+                              data-product-cover=${product.coverImageUrl},
+                              data-product-author=${product.author}">
+                <div class="result-card-media">
+                    <img th:src="${product.coverImageUrl}" th:alt="${'Cover von ' + product.title}" loading="lazy">
+                    <button class="favorite-button" type="button" th:attr="data-favorite-id=${product.id}">
+                        <span aria-hidden="true">❤</span>
+                        <span class="sr-only">Zu Favoriten hinzufügen</span>
+                    </button>
+                </div>
+                <div class="result-card-body">
+                    <span class="badge" th:text="${product.format}">Format</span>
+                    <h3><a th:href="@{'/products/' + ${product.id}}" th:text="${product.title}"></a></h3>
+                    <p><strong>Autor:</strong> <span th:text="${product.author}"></span></p>
+                    <p><strong>ISBN:</strong> <span th:text="${product.isbn}"></span></p>
+                    <p class="amzn-price"><span th:text="${#numbers.formatDecimal(product.price,1,2)}"></span> €</p>
+                    <p class="result-description" th:text="${product.description}"></p>
+                    <div class="add-to-cart-form">
+                        <div class="quantity-row">
+                            <label th:for="${'qty-' + product.id}">Menge</label>
+                            <input class="qty-input" th:id="${'qty-' + product.id}" type="number" min="1" value="1">
+                        </div>
+                        <button type="button" class="button-primary" data-add-to-cart>
+                            In den Warenkorb
+                        </button>
+                    </div>
+                </div>
+            </article>
+        </div>
     </div>
 </section>
-<script>
-    document.querySelectorAll('form[data-cart-form]')?.forEach(form => {
-        form.addEventListener('submit', function (event) {
-            event.preventDefault();
-            const formData = new FormData(form);
-            const payload = {
-                productId: Number(formData.get('productId')),
-                quantity: Number(formData.get('quantity'))
-            };
-            fetch('/api/cart/items', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            }).then(res => {
-                if (res.ok) {
-                    alert('Zum Warenkorb hinzugefügt.');
-                } else if (res.status === 401) {
-                    window.location.href = '/login';
-                } else {
-                    res.json().then(data => alert(data.error || 'Fehler beim Hinzufügen.'));
-                }
-            });
-        });
-    });
-</script>
 </body>
 </html>

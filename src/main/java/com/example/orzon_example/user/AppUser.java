@@ -103,8 +103,16 @@ public class AppUser {
     public UserDetails toUserDetails() {
         return User.withUsername(username)
                 .password(password)
-                .authorities(roles.stream().map(role -> "ROLE_" + role.toUpperCase()).toList())
+                .roles(roles.stream()
+                        .filter(Objects::nonNull)
+                        .map(this::normalizeRoleName)
+                        .toArray(String[]::new))
                 .build();
+    }
+
+    private String normalizeRoleName(String role) {
+        String value = role.startsWith("ROLE_") ? role.substring("ROLE_".length()) : role;
+        return value.toUpperCase();
     }
 
     @Override

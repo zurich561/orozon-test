@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="de" th:replace="fragments/layout :: layout(~{::title}, ~{::section})">
+<head>
+    <title>Seite nicht gefunden</title>
+</head>
+<body>
+<section class="amzn-section error-page">
+    <h2>Seite nicht gefunden</h2>
+    <p>Die angeforderte Seite konnte leider nicht gefunden werden.</p>
+    <p>Prüfen Sie bitte die URL oder kehren Sie zur Startseite zurück.</p>
+    <div class="error-actions">
+        <a class="button-primary" th:href="@{/}">Zur Startseite</a>
+        <a class="button-secondary" th:href="@{/search}">Produkte durchsuchen</a>
+    </div>
+</section>
+</body>
+</html>

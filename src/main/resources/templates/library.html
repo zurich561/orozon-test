@@ -11,7 +11,7 @@
     </div>
     <ul th:unless="${#lists.isEmpty(books)}">
         <li th:each="book : ${books}">
-            <span th:text="${book.title()} + ' von ' + book.author()"></span>
+            <span th:text="|${book.title()} von ${book.author()}|"></span>
             <span th:text="${#temporals.format(book.purchasedAt(), 'dd.MM.yyyy HH:mm')}" class="purchase-date"></span>
             <a th:href="@{'/library/read/' + ${book.productId()}}">Im Browser lesen</a>
             <a th:href="@{'/api/library/' + ${book.productId()} + '/download'}" download>Download</a>

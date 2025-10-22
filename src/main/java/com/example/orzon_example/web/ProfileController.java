@@ -10,9 +10,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class ProfileController {
@@ -37,17 +39,39 @@ public class ProfileController {
 
     @PostMapping("/profile/update")
     public String updateProfile(@Valid @ModelAttribute("updateRequest") UserService.UpdateUserRequest request,
-                                @AuthenticationPrincipal UserDetails principal) {
+                                BindingResult bindingResult,
+                                @AuthenticationPrincipal UserDetails principal,
+                                RedirectAttributes attributes) {
         AppUser user = requireUser(principal);
-        userService.updateProfile(user.getId(), request);
+        if (bindingResult.hasErrors()) {
+            attributes.addFlashAttribute("errorMessage", "Bitte prüfen Sie Ihre Eingaben.");
+            return "redirect:/profile";
+        }
+        try {
+            userService.updateProfile(user.getId(), request);
+            attributes.addFlashAttribute("successMessage", "Profil wurde aktualisiert.");
+        } catch (IllegalArgumentException ex) {
+            attributes.addFlashAttribute("errorMessage", ex.getMessage());
+        }
         return "redirect:/profile";
     }
 
     @PostMapping("/profile/address")
     public String addAddress(@Valid @ModelAttribute("addressForm") Address.AddressDto dto,
-                             @AuthenticationPrincipal UserDetails principal) {
+                             BindingResult bindingResult,
+                             @AuthenticationPrincipal UserDetails principal,
+                             RedirectAttributes attributes) {
         AppUser user = requireUser(principal);
-        addressService.saveAddress(user.getId(), dto);
+        if (bindingResult.hasErrors()) {
+            attributes.addFlashAttribute("errorMessage", "Bitte füllen Sie alle Pflichtfelder korrekt aus.");
+            return "redirect:/profile";
+        }
+        try {
+            addressService.saveAddress(user.getId(), dto);
+            attributes.addFlashAttribute("successMessage", "Adresse gespeichert.");
+        } catch (IllegalArgumentException ex) {
+            attributes.addFlashAttribute("errorMessage", mapAddressError(ex.getMessage()));
+        }
         return "redirect:/profile";
     }
 
@@ -56,5 +80,19 @@ public class ProfileController {
             throw new IllegalStateException("Bitte anmelden");
         }
         return userService.findByUsername(principal.getUsername()).orElseThrow();
+    }
+
+    private String mapAddressError(String message) {
+        if (message == null) {
+            return "Adresse konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.";
+        }
+        String normalized = message.toLowerCase();
+        if (normalized.contains("postal code does not match")) {
+            return "Bitte geben Sie eine gültige Postleitzahl für das ausgewählte Land ein.";
+        }
+        if (normalized.contains("required")) {
+            return "Bitte füllen Sie alle Pflichtfelder aus.";
+        }
+        return message;
     }
 }

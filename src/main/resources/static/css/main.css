@@ -1,0 +1,174 @@
+:root {
+    color-scheme: light dark;
+    --primary-color: #005a9c;
+    --accent-color: #ffa500;
+    --text-color: #111;
+    --background-color: #fff;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    margin: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.skip-link {
+    position: absolute;
+    left: -1000px;
+    top: -1000px;
+    background: #000;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    z-index: 1000;
+}
+
+.skip-link:focus {
+    left: 1rem;
+    top: 1rem;
+}
+
+.site-header {
+    background: var(--primary-color);
+    color: #fff;
+    padding: 1rem;
+}
+
+.site-title a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.nav-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 0;
+}
+
+.nav-list a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+main {
+    padding: 1rem;
+}
+
+form {
+    display: grid;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+label {
+    font-weight: 600;
+}
+
+input, select, button, textarea {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 2px solid #444;
+    border-radius: 4px;
+}
+
+button {
+    background: var(--primary-color);
+    color: #fff;
+    cursor: pointer;
+    border: none;
+}
+
+button:focus, a:focus, input:focus, select:focus {
+    outline: 3px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.result-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.result-card {
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    padding: 1rem;
+    background: #fdfdfd;
+}
+
+.alert {
+    padding: 0.75rem;
+    border-radius: 4px;
+    background: #0f5132;
+    color: #fff;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    border: 1px solid #555;
+    padding: 0.5rem;
+    text-align: left;
+}
+
+.site-footer {
+    background: #222;
+    color: #fff;
+    padding: 1rem;
+    text-align: center;
+}
+
+.autocomplete-list {
+    border: 1px solid #ccc;
+    background: #fff;
+    position: absolute;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 100%;
+    z-index: 100;
+}
+
+.autocomplete-list li {
+    padding: 0.5rem;
+    cursor: pointer;
+}
+
+.autocomplete-list li:hover,
+.autocomplete-list li:focus {
+    background: var(--accent-color);
+    color: #000;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+.alert-error {
+    background: #a60000;
+    color: #fff;
+}
+.button {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    background: var(--primary-color);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 600;
+}

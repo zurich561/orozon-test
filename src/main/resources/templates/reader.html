@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="de" th:replace="fragments/layout :: layout(~{::title}, ~{::section})">
+<head>
+    <title>E-Book Reader</title>
+</head>
+<body>
+<section>
+    <h2>E-Book</h2>
+    <article class="result-card" role="article" aria-label="E-Book Inhalt">
+        <pre th:text="${content}" aria-live="polite"></pre>
+    </article>
+</section>
+</body>
+</html>

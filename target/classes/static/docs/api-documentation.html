@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Orozon API Dokumentation</title>
+    <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+<h1>Orozon API &amp; Frontend Dokumentation</h1>
+<section>
+    <h2>Produktsuche</h2>
+    <ul>
+        <li><code>GET /api/products</code> – Sucht Produkte mit Parametern <code>q</code>, <code>category</code>, <code>author</code>, <code>language</code>, <code>format</code>, <code>minPrice</code>, <code>maxPrice</code>, <code>page</code>, <code>size</code>.</li>
+        <li><code>GET /api/products/autocomplete?term=</code> – Autocomplete mit Drosselung.</li>
+        <li><code>GET /api/products/{id}</code> – Produktdetails.</li>
+    </ul>
+</section>
+<section>
+    <h2>Warenkorb &amp; Checkout</h2>
+    <ul>
+        <li><code>GET /api/cart</code> – Aktueller Warenkorb.</li>
+        <li><code>POST /api/cart/items</code> – Produkt hinzufügen ({"productId", "quantity"}).</li>
+        <li><code>PUT /api/cart/items/{itemId}</code> – Menge aktualisieren.</li>
+        <li><code>DELETE /api/cart/items/{itemId}</code> – Artikel entfernen.</li>
+        <li><code>POST /api/cart/coupon?code=</code> – Gutschein anwenden.</li>
+        <li><code>POST /api/checkout</code> – Checkout mit <code>shippingAddressId</code>, <code>billingAddressId</code>, optional <code>couponCode</code> und <code>confirmPurchase</code>.</li>
+    </ul>
+</section>
+<section>
+    <h2>Adressen</h2>
+    <ul>
+        <li><code>GET /api/addresses</code> – Listet Adressen der angemeldeten Nutzer:innen.</li>
+        <li><code>POST /api/addresses</code> – Adresse speichern (Validierung von Land und PLZ).</li>
+    </ul>
+</section>
+<section>
+    <h2>Benutzer &amp; Authentifizierung</h2>
+    <ul>
+        <li><code>POST /auth/register</code> – Registrierung über Formular.</li>
+        <li><code>POST /auth/password-reset</code> – Passwort zurücksetzen.</li>
+        <li><code>GET /api/users/me</code>, <code>PUT /api/users/me</code>, <code>DELETE /api/users/me</code> – Profil anzeigen, aktualisieren, löschen.</li>
+        <li><code>GET /api/users/me/export</code> – JSON Export.</li>
+    </ul>
+</section>
+<section>
+    <h2>Bibliothek</h2>
+    <ul>
+        <li><code>GET /api/library</code> – Gekaufte Bücher.</li>
+        <li><code>GET /api/library/{productId}/read</code> – Leseansicht.</li>
+        <li><code>GET /api/library/{productId}/download</code> – Download als Textdatei.</li>
+    </ul>
+</section>
+<section>
+    <h2>Empfehlungen &amp; Analytics</h2>
+    <ul>
+        <li><code>GET /api/recommendations/product/{productId}</code> – Ähnliche Titel &amp; „Kund:innen kauften auch“.</li>
+        <li><code>POST /api/events</code> – Tracking von Nutzeraktionen.</li>
+        <li><code>GET /api/events/metrics</code> – Dashboarddaten (Gesamt, 24h, Conversion).</li>
+    </ul>
+</section>
+<section>
+    <h2>Frontend Seiten</h2>
+    <ul>
+        <li><strong>/</strong> – Produktsuche mit Autocomplete und Filter.</li>
+        <li><strong>/products/{id}</strong> – Produktdetailseite mit Empfehlungen.</li>
+        <li><strong>/cart</strong> – Warenkorb, Mengenänderung, Gutschein.</li>
+        <li><strong>/checkout</strong> – Checkout mit Adressauswahl und Kostenübersicht.</li>
+        <li><strong>/profile</strong> – Profildaten, Adressverwaltung, Datenexport.</li>
+        <li><strong>/library</strong> – Gekaufte Bücher mit Download &amp; Reader.</li>
+        <li><strong>/analytics</strong> – Ereignis-Dashboard.</li>
+        <li><strong>/login</strong>, <strong>/register</strong>, <strong>/auth/password-reset</strong> – Authentifizierungs-Workflows.</li>
+    </ul>
+</section>
+</body>
+</html>

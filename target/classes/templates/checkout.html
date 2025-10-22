@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="de" th:replace="fragments/layout :: layout(~{::title}, ~{::section})">
+<head>
+    <title>Checkout</title>
+</head>
+<body>
+<section>
+    <h2>Kasse</h2>
+    <div th:if="${success}">
+        <p class="alert" role="status">Vielen Dank für Ihren Einkauf! Die Artikel stehen in Ihrer Bibliothek bereit.</p>
+    </div>
+    <form th:object="${checkoutRequest}" method="post" th:action="@{/checkout/preview}" aria-describedby="checkoutSummary">
+        <label for="shippingSelect">Versandadresse</label>
+        <select id="shippingSelect" th:field="*{shippingAddressId}" required>
+            <option th:each="address : ${addresses}" th:value="${address.id}" th:text="${address.street + ', ' + address.postalCode + ' ' + address.city}"></option>
+        </select>
+        <label for="billingSelect">Rechnungsadresse</label>
+        <select id="billingSelect" th:field="*{billingAddressId}" required>
+            <option th:each="address : ${addresses}" th:value="${address.id}" th:text="${address.street + ', ' + address.postalCode + ' ' + address.city}"></option>
+        </select>
+        <label for="coupon">Gutschein</label>
+        <input id="coupon" th:field="*{couponCode}" type="text">
+        <div class="button-row">
+            <button type="submit">Kosten berechnen</button>
+        </div>
+    </form>
+    <div th:if="${summary}" id="checkoutSummary" role="region" aria-live="polite">
+        <h3>Kostenübersicht</h3>
+        <p><strong>Zwischensumme:</strong> <span th:text="${#numbers.formatDecimal(summary.cart().subtotal(),1,2)}"></span> €</p>
+        <p><strong>Rabatt:</strong> <span th:text="${#numbers.formatDecimal(summary.cart().discount(),1,2)}"></span> €</p>
+        <p><strong>Versand:</strong> <span th:text="${#numbers.formatDecimal(summary.shippingCost(),1,2)}"></span> €</p>
+        <p><strong>Steuer:</strong> <span th:text="${#numbers.formatDecimal(summary.tax(),1,2)}"></span> €</p>
+        <p><strong>Gesamt:</strong> <span th:text="${#numbers.formatDecimal(summary.grandTotal(),1,2)}"></span> €</p>
+        <form th:object="${checkoutRequest}" method="post" th:action="@{/checkout/confirm}">
+            <input type="hidden" th:field="*{shippingAddressId}">
+            <input type="hidden" th:field="*{billingAddressId}">
+            <input type="hidden" th:field="*{couponCode}">
+            <button type="submit">Jetzt kaufen</button>
+        </form>
+    </div>
+</section>
+</body>
+</html>

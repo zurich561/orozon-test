@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="de" th:fragment="layout(title, content)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title}">Orozon</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Zum Inhalt springen</a>
+<header class="site-header" role="banner">
+    <h1 class="site-title"><a th:href="@{/}">Orozon Bücherwelt</a></h1>
+    <nav aria-label="Hauptnavigation">
+        <ul class="nav-list">
+            <li><a th:href="@{/}">Suche</a></li>
+            <li><a th:href="@{/library}">Bibliothek</a></li>
+            <li><a th:href="@{/cart}">Warenkorb</a></li>
+            <li><a th:href="@{/checkout}">Checkout</a></li>
+            <li><a th:href="@{/profile}">Profil</a></li>
+            <li><a th:href="@{/analytics}">Analytics</a></li>
+            <li><a th:href="@{/login}">Anmelden</a></li>
+        </ul>
+    </nav>
+</header>
+<main id="main-content" tabindex="-1" role="main">
+    <section th:replace="${content}"></section>
+</main>
+<footer class="site-footer" role="contentinfo">
+    <p>&copy; <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy')}">2024</span> Orozon Demo.</p>
+    <p><a th:href="@{/docs/api-documentation.html}" aria-label="API Dokumentation">API Dokumentation</a></p>
+</footer>
+<script th:src="@{/js/search.js}"></script>
+</body>
+</html>

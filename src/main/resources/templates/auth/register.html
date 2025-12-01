@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="de" th:replace="fragments/layout :: layout(~{::title}, ~{::section})">
+<head>
+    <title>Registrierung</title>
+</head>
+<body>
+<section>
+    <h2>Registrieren</h2>
+    <form th:action="@{/auth/register}" th:object="${registerRequest}" method="post">
+        <label for="username">Benutzername</label>
+        <input id="username" th:field="*{username}" required>
+        <label for="email">E-Mail</label>
+        <input id="email" type="email" th:field="*{email}" required>
+        <label for="password">Passwort</label>
+        <input id="password" type="password" th:field="*{password}" minlength="8" required>
+        <button type="submit">Registrieren</button>
+    </form>
+    <p>Bereits ein Konto? <a th:href="@{/login}">Hier anmelden</a></p>
+</section>
+</body>
+</html>

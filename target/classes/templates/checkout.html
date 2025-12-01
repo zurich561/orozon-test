@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="de" th:replace="fragments/layout :: layout(~{::title}, ~{::section})">
+<head>
+    <title>Checkout</title>
+</head>
+<body>
+<section class="amzn-section checkout-shell" id="checkout-page">
+    <h2>Kasse</h2>
+    <div class="alert alert-error hidden" id="checkout-auth-warning" role="alert">
+        Bitte melden Sie sich an, um den Kauf abzuschließen.
+    </div>
+    <div class="alert hidden" id="checkout-success" role="status">
+        Vielen Dank für Ihren Einkauf! Die Artikel stehen in Ihrer Bibliothek bereit.
+    </div>
+    <div class="checkout-layout hidden" id="checkout-content">
+        <div class="checkout-summary">
+            <h3>Bestellübersicht</h3>
+            <div id="checkout-items"></div>
+            <div class="checkout-totals">
+                <p>Zwischensumme: <strong id="checkout-subtotal">0,00 €</strong></p>
+                <p>Rabatt: <strong id="checkout-discount">0,00 €</strong></p>
+                <p>Versand: <strong id="checkout-shipping">0,00 €</strong></p>
+            </div>
+            <div class="checkout-grand-total">
+                Gesamt: <span id="checkout-total">0,00 €</span>
+            </div>
+        </div>
+        <div class="checkout-form">
+            <h3>Ihre Angaben</h3>
+            <form id="checkout-form">
+                <label for="shippingSelect">Versandadresse</label>
+                <select id="shippingSelect" required></select>
+
+                <label for="billingSelect">Rechnungsadresse</label>
+                <select id="billingSelect" required></select>
+
+                <label for="checkoutCoupon">Gutschein</label>
+                <input id="checkoutCoupon" type="text" placeholder="WELCOME10">
+
+                <div class="checkout-actions">
+                    <button type="button" class="button-secondary" id="checkout-preview">Kosten berechnen</button>
+                    <button type="button" class="button-primary" id="checkout-confirm">Jetzt kaufen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+</body>
+</html>

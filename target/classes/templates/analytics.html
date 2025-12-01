@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="de" th:replace="fragments/layout :: layout(~{::title}, ~{::section})">
+<head>
+    <title>Analytics</title>
+</head>
+<body>
+<section>
+    <h2>Analytics Dashboard</h2>
+    <div th:if="${dashboard}">
+        <p><strong>Ereignisse letzte 24h:</strong> <span th:text="${dashboard.metrics().eventsLast24Hours()}"></span></p>
+        <p><strong>Aktive Benutzer:</strong> <span th:text="${dashboard.metrics().uniqueUsers()}"></span></p>
+        <p><strong>Conversion Rate:</strong> <span th:text="${#numbers.formatDecimal(dashboard.conversionRate() * 100, 1, 1)}"></span> %</p>
+        <h3>Ereignisse nach Typ</h3>
+        <table class="table" aria-label="Ereignisse nach Typ">
+            <thead>
+            <tr><th>Typ</th><th>Anzahl</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="entry : ${#maps.entries(dashboard.metrics().counts())}">
+                <td th:text="${entry.key}"></td>
+                <td th:text="${entry.value}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <h3>Tägliche Events</h3>
+        <ul>
+            <li th:each="entry : ${#maps.entries(dashboard.metrics().dailyCounts())}" th:text="${entry.key} + ': ' + entry.value"></li>
+        </ul>
+    </div>
+    <div th:if="${dashboard == null}">
+        <p>Keine Daten vorhanden.</p>
+    </div>
+</section>
+</body>
+</html>

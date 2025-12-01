@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="de" th:replace="fragments/layout :: layout(~{::title}, ~{::section})">
+<head>
+    <title>Bibliothek</title>
+</head>
+<body>
+<section>
+    <h2>Ihre Bibliothek</h2>
+    <div th:if="${#lists.isEmpty(books)}">
+        <p>Noch keine Käufe vorhanden.</p>
+    </div>
+    <ul th:unless="${#lists.isEmpty(books)}">
+        <li th:each="book : ${books}">
+            <span th:text="|${book.title()} von ${book.author()}|"></span>
+            <span th:text="${#temporals.format(book.purchasedAt(), 'dd.MM.yyyy HH:mm')}" class="purchase-date"></span>
+            <a th:href="@{'/library/read/' + ${book.productId()}}">Im Browser lesen</a>
+            <a th:href="@{'/api/library/' + ${book.productId()} + '/download'}" download>Download</a>
+        </li>
+    </ul>
+</section>
+</body>
+</html>

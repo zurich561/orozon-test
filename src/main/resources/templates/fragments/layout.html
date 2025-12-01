@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="de" th:fragment="layout(title, content)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title}">Orozon</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body class="amzn-body"
+      th:attr="data-error=${#ctx.containsVariable('errorMessage') ? errorMessage : ''},
+               data-success=${#ctx.containsVariable('successMessage') ? successMessage : ''}">
+<a class="skip-link" href="#main-content">Zum Inhalt springen</a>
+<header class="amzn-header" role="banner">
+    <div class="amzn-top-bar">
+        <div class="amzn-brand">
+            <a class="amzn-logo" th:href="@{/}" aria-label="Zur Startseite">
+                <span aria-hidden="true">orozon</span>
+            </a>
+            <div class="amzn-location">
+                <span class="amzn-location-label">Lieferung an</span>
+                <span class="amzn-location-destination">Deutschland</span>
+            </div>
+        </div>
+        <form class="amzn-search" role="search" th:action="@{/search}" method="get">
+            <label class="sr-only" for="global-search-input">Produkte suchen</label>
+            <input id="global-search-input" name="q" type="search" placeholder="Suche Orozon" th:value="${param.q}">
+            <button type="submit" aria-label="Suchen">
+                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                    <path d="M15.5 14h-.79l-.28-.27A6.5 6.5 0 1 0 14 15.5l.27.28v.79L20 21.49 21.49 20zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"></path>
+                </svg>
+            </button>
+        </form>
+        <div class="amzn-actions">
+            <div class="amzn-user-menu" data-user-menu>
+                <button class="amzn-user-trigger" type="button" aria-haspopup="true" aria-expanded="false">
+                    <img src="https://i.pravatar.cc/80?img=12" alt="Konto" class="amzn-user-avatar">
+                </button>
+                <div class="amzn-user-dropdown" role="menu">
+                    <div class="amzn-user-greeting" th:if="${#authorization.expression('isAuthenticated()')}">
+                        Hallo, <span th:text="${#authentication.name}">User</span>
+                    </div>
+                    <a role="menuitem" th:href="@{/analytics}">Analytics</a>
+                    <a role="menuitem" th:href="@{/profile}">Konto</a>
+                    <a role="menuitem" th:href="@{/login}" th:if="${#authorization.expression('isAnonymous()')}">Anmelden</a>
+                    <form role="menuitem" th:if="${#authorization.expression('isAuthenticated()')}" method="post" th:action="@{/logout}">
+                        <button type="submit">Abmelden</button>
+                    </form>
+                </div>
+            </div>
+            <div class="amzn-favorites" data-favorites-menu>
+                <button class="amzn-favorites-link" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Favoriten anzeigen">
+                    <span class="amzn-favorites-count">0</span>
+                    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                        <path d="M12 21.35 10.55 20C5.4 15.36 2 12.27 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.77-3.4 6.86-8.55 11.54z"></path>
+                    </svg>
+                </button>
+                <div class="favorites-dropdown" role="menu">
+                    <h4>Ihre Favoriten</h4>
+                    <p class="favorites-empty" data-favorites-empty>Keine Favoriten gespeichert.</p>
+                    <div class="favorites-list" data-favorites-list></div>
+                </div>
+            </div>
+            <a class="amzn-cart-link" th:href="@{/cart}" aria-label="Warenkorb anzeigen" data-cart-link>
+                <span class="amzn-cart-count" th:text="${cartItemCount != null ? cartItemCount : 0}">0</span>
+                <span class="amzn-cart-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                        <path d="M7 4h-2l-1 2v2h2l1-2h11l2 4H8l-1-2H5v2l2 5h11l2-4V8l-1-2H7V4zm1 6h11l-1 2H8l-1-2zM7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"></path>
+                    </svg>
+                </span>
+                <span class="amzn-highlight">Warenkorb</span>
+            </a>
+        </div>
+    </div>
+    <nav class="amzn-subnav" aria-label="Sekundäre Navigation">
+        <ul class="amzn-subnav-list">
+            <li><a th:href="@{/}" class="active">Entdecken</a></li>
+            <li><a th:href="@{/search}">Bücher</a></li>
+            <li><a th:href="@{/library}">Ihre Bibliothek</a></li>
+            <li><a th:href="@{/docs/api-documentation.html}">Dokumentation</a></li>
+        </ul>
+    </nav>
+</header>
+<main id="main-content" tabindex="-1" role="main" class="amzn-main">
+    <section class="amzn-content" th:replace="${content}"></section>
+</main>
+<footer class="amzn-footer" role="contentinfo">
+    <div class="amzn-footer-columns">
+        <div>
+            <h3>Über Orozon</h3>
+            <ul>
+                <li><a th:href="@{/docs/api-documentation.html}">API Dokumentation</a></li>
+                <li><a th:href="@{/profile}">Ihr Konto</a></li>
+                <li><a th:href="@{/library}">Ihre Bibliothek</a></li>
+            </ul>
+        </div>
+        <div>
+            <h3>Hilfe</h3>
+            <ul>
+                <li><a th:href="@{/cart}">Warenkorb &amp; Versand</a></li>
+                <li><a th:href="@{/checkout}">Zahlungsoptionen</a></li>
+                <li><a th:href="@{/profile}">Kontoeinstellungen</a></li>
+            </ul>
+        </div>
+    </div>
+    <p>&copy; <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy')}">2024</span> Orozon Demo. Alle Rechte vorbehalten.</p>
+</footer>
+<script th:src="@{/js/search.js}"></script>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

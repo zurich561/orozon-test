@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="de" th:replace="fragments/layout :: layout(~{::title}, ~{::section})">
+<head>
+    <title>Warenkorb</title>
+</head>
+<body>
+<section class="amzn-section" id="cart-page">
+    <h2>Ihr Warenkorb</h2>
+    <div class="cart-empty hidden" id="cart-empty">
+        <p>Ihr Warenkorb ist derzeit leer. Entdecken Sie unsere Bestseller und füllen Sie ihn mit neuen Lieblingsbüchern.</p>
+        <a href="/search" class="button-secondary">Jetzt stöbern</a>
+    </div>
+    <div class="cart-layout hidden" id="cart-content">
+        <div class="cart-items" id="cart-items"></div>
+        <aside class="cart-summary-card" id="cart-summary" role="region" aria-live="polite">
+            <h3>Bestellübersicht</h3>
+            <p>Zwischensumme: <strong id="cart-subtotal">0,00 €</strong></p>
+            <p>Rabatt: <strong id="cart-discount">0,00 €</strong></p>
+            <p class="cart-summary-total">Gesamt: <span id="cart-total">0,00 €</span></p>
+            <div class="coupon-form" aria-label="Gutschein anwenden">
+                <label for="couponCode">Gutscheincode</label>
+                <input id="couponCode" type="text" placeholder="WELCOME10">
+                <button type="button" id="apply-coupon">Anwenden</button>
+                <p class="coupon-feedback" id="coupon-feedback" role="status"></p>
+            </div>
+            <button class="button-primary" type="button" id="checkout-button">Zur Kasse</button>
+        </aside>
+    </div>
+</section>
+</body>
+</html>

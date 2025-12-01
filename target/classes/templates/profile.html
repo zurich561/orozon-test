@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="de" th:replace="fragments/layout :: layout(~{::title}, ~{::section})">
+<head>
+    <title>Profil</title>
+</head>
+<body>
+<section>
+    <h2>Profil verwalten</h2>
+    <form th:action="@{/profile/update}" th:object="${updateRequest}" method="post" aria-label="Profildaten aktualisieren">
+        <label for="username">Benutzername</label>
+        <input id="username" th:field="*{username}" required>
+        <label for="email">E-Mail</label>
+        <input id="email" type="email" th:field="*{email}" required>
+        <button type="submit">Speichern</button>
+    </form>
+
+    <section aria-labelledby="addressHeading">
+        <h3 id="addressHeading">Adressen</h3>
+        <ul class="address-list">
+            <li th:each="address : ${addresses}">
+                <span class="address-label" th:text="${address.type}">SHIPPING</span>
+                <div class="address-line">
+                    <span th:text="${address.street}">Straße</span>,
+                    <span th:text="${address.postalCode}">PLZ</span>
+                    <span th:text="${address.city}">Stadt</span>,
+                    <span th:text="${address.country}">Land</span>
+                </div>
+            </li>
+        </ul>
+        <form th:action="@{/profile/address}" th:object="${addressForm}" method="post" aria-label="Adresse hinzufügen">
+            <label for="addrType">Typ</label>
+            <select id="addrType" th:field="*{type}">
+                <option th:each="type : ${T(com.example.orzon_example.address.AddressType).values()}" th:value="${type}" th:text="${type}"></option>
+            </select>
+            <label for="street">Straße</label>
+            <input id="street" th:field="*{street}" required>
+            <label for="city">Stadt</label>
+            <input id="city" th:field="*{city}" required>
+            <label for="postal">PLZ</label>
+            <input id="postal" th:field="*{postalCode}" required>
+            <label for="country">Land</label>
+            <input id="country" th:field="*{country}" required>
+            <label for="state">Bundesland</label>
+            <input id="state" th:field="*{state}">
+            <button type="submit">Adresse speichern</button>
+        </form>
+    </section>
+
+    <section>
+        <h3>Datenexport</h3>
+        <p>Exportieren Sie Ihre Daten als JSON.</p>
+        <button type="button" id="exportButton">Daten exportieren</button>
+        <pre id="exportResult" role="region" aria-live="polite"></pre>
+    </section>
+</section>
+<script>
+    const exportButton = document.getElementById('exportButton');
+    if (exportButton) {
+        exportButton.addEventListener('click', () => {
+            fetch('/api/users/me/export')
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('exportResult').textContent = JSON.stringify(data, null, 2);
+                });
+        });
+    }
+</script>
+</body>
+</html>
